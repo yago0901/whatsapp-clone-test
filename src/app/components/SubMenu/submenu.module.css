@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/fonts/SFProText-Regular.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.submenu {
+  width: 30%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.actions {
+  width: 93%;
+  height: 6.5%;
+  background-color: gray;
+  font-family: 'SF Pro Text', sans-serif;
+  font-size: 20.5px;
+  font-weight: 700;
+  padding-top: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+}
