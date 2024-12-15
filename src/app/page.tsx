@@ -1,3 +1,4 @@
+import Conversation from './components/Conversation/Conversation';
 import Header from './components/Header/Header';
 import SubMenu from './components/SubMenu/SubMenu';
 import styles from "./page.module.css";
@@ -12,6 +13,7 @@ export default function Home() {
       <div className={styles.content}>
         <Header />
         <SubMenu/>
+        <Conversation/>
       </div>
     </div>
   );

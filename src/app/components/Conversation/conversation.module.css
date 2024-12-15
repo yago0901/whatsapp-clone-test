@@ -1,0 +1,50 @@
+.conversation{
+  width: 66%;
+  height: 100%;
+  background-color: white;
+}
+
+.header {
+  width: 100%;
+  height: 7.5%;
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.description {
+  margin-left: 1rem;
+  display: flex;
+}
+
+.dados {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 1rem;
+  font-family: var(--font-roboto);
+}
+
+.status {
+  color: #aaaaaa;
+  font-size: 14px;
+}
+
+.screen {
+  width: 100%;
+  height: 85.5%;
+  background-image: url('/background.jpg');
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+}
+
+.send{
+  width: 100%;
+  height: 7%;
+  background-color: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
