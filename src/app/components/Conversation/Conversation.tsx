@@ -13,6 +13,8 @@ function Conversation() {
 
   const [message, setMessage] = useState<string>('');
 
+  const [modalFileSend, seModalFileSend] = useState<boolean>(false);
+
   const handleToggleRecording = async () => {
     if (isRecording) {
       if (mediaRecorderRef.current) {
@@ -101,7 +103,52 @@ function Conversation() {
             alt="Globe icon"
             width={28}
             height={28}
+            onClick={() => seModalFileSend(!modalFileSend)}
           />
+          {modalFileSend &&
+            <div className={styles.modalFileSend}>
+              <div className={styles.documents}>
+                <Image
+                  aria-hidden
+                  src="/document.svg"
+                  alt="Globe icon"
+                  width={18}
+                  height={18}
+                />
+                <p className={styles.title}>Documentos</p>
+              </div>
+              <div className={styles.pictures}>
+                <Image
+                  aria-hidden
+                  src="/picture.svg"
+                  alt="Globe icon"
+                  width={18}
+                  height={18}
+                />
+                <p className={styles.title}>Fotos e vídeos</p>
+              </div>
+              <div className={styles.cam}>
+                <Image
+                  aria-hidden
+                  src="/cam.svg"
+                  alt="Globe icon"
+                  width={18}
+                  height={18}
+                />
+                <p className={styles.title}>Câmera</p>
+              </div>
+              <div className={styles.contact}>
+              <Image
+                  aria-hidden
+                  src="/contact.svg"
+                  alt="Globe icon"
+                  width={18}
+                  height={18}
+                />
+                <p className={styles.title}>Contato</p>
+              </div>
+            </div>
+          }
         </button>
         <div className={styles.message}>
           <button className={styles.face}>
@@ -113,7 +160,12 @@ function Conversation() {
               height={24}
             />
           </button>
-          <input type="text" placeholder='Digite uma mensagem' value={message} onChange={(e: ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)} />
+          <input
+            type="text"
+            placeholder='Digite uma mensagem'
+            value={message}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+          />
         </div>
         <button
           className={styles.plus}
@@ -122,7 +174,7 @@ function Conversation() {
           {isRecording ? (
             <Image
               aria-hidden
-              src="/send.svg" 
+              src="/send.svg"
               alt="Stop recording"
               width={24}
               height={24}
