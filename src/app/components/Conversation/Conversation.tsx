@@ -19,7 +19,31 @@ function Conversation() {
             <div className={styles.status}>online</div>
           </div>
         </div>
-        <div className={styles.actions}>Actions</div>
+        <div className={styles.actions}>
+          <Image
+          className={styles.camera}
+            aria-hidden
+            src="/video.svg"
+            alt="Globe icon"
+            width={20}
+            height={20}
+          />
+          <Image
+          className={styles.search}
+            aria-hidden
+            src="/search.svg"
+            alt="Globe icon"
+            width={34}
+            height={34}
+          />
+          <Image
+            aria-hidden
+            src="/menu.svg"
+            alt="Globe icon"
+            width={28}
+            height={28}
+          />
+        </div>
       </div>
       <div className={styles.screen}>COnversa aqui</div>
       <div className={styles.send}>
@@ -34,13 +58,13 @@ function Conversation() {
         </button>
         <div className={styles.message}>
           <button className={styles.face}>
-          <Image
-            aria-hidden
-            src="/face.svg"
-            alt="Globe icon"
-            width={24}
-            height={24}
-          />
+            <Image
+              aria-hidden
+              src="/face.svg"
+              alt="Globe icon"
+              width={24}
+              height={24}
+            />
           </button>
           <input type="text" placeholder='Digite uma mensagem' />
         </div>
