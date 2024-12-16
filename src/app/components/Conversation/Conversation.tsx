@@ -1,19 +1,28 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from 'react'
-import styles from "./conversation.module.css";
+import React, { ChangeEvent, useRef, useState } from 'react';
+import styles from './conversation.module.css';
 import Image from 'next/image';
 
-function Conversation() {
+interface IMessage {
+  id: number;
+  sender: number;
+  content: string;
+  timestamp: Date;
+  type: 'text' | 'audio' | 'image' | 'file' | 'contact';
+}
 
+function Conversation() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const [message, setMessage] = useState<string>('');
+  const [textMessage, setTextMessage] = useState<string>('');
+  const [thread, setThread] = useState<IMessage[]>([]);
 
-  const [modalFileSend, seModalFileSend] = useState<boolean>(false);
+  const [modalFileSend, setModalFileSend] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleToggleRecording = async () => {
     if (isRecording) {
@@ -36,6 +45,16 @@ function Conversation() {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
           const audioUrl = URL.createObjectURL(audioBlob);
           setAudioUrl(audioUrl);
+
+          const newMessage: IMessage = {
+            id: Date.now(),
+            sender: 1,
+            content: audioUrl,
+            timestamp: new Date(),
+            type: 'audio',
+          };
+          setThread((prev) => [...prev, newMessage]);
+          setAudioUrl(null);
         };
 
         mediaRecorder.start();
@@ -43,6 +62,48 @@ function Conversation() {
       } catch (error) {
         console.error('Error accessing microphone:', error);
       }
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (textMessage.trim() !== '') {
+      const newMessage: IMessage = {
+        id: Date.now(),
+        sender: 1,
+        content: textMessage,
+        timestamp: new Date(),
+        type: 'text',
+      };
+      setThread((prev) => [...prev, newMessage]);
+      setTextMessage('');
+    }
+  };
+
+  const handleSends = () => {
+    if (textMessage.length > 0 && audioUrl === null) {
+      handleSendMessage();
+    } else {
+      handleToggleRecording();
+    }
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const newMessage: IMessage = {
+        id: Date.now(),
+        sender: 1,
+        content: file.name,
+        timestamp: new Date(),
+        type: 'file',
+      };
+      setThread((prev) => [...prev, newMessage]);
+    }
+  };
+
+  const handleDocumentsClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -89,11 +150,23 @@ function Conversation() {
         </div>
       </div>
       <div className={styles.screen}>
-        {audioUrl && (
-          <div>
-            <audio controls src={audioUrl} />
+        {thread.map((message) => (
+          <div key={message.id} className={styles.messageItem}>
+            <span><b>{message.type === 'text' ? 'Texto:' : message.type === 'file' ? 'Arquivo:' : 'Áudio:'}</b></span>
+            {message.type === 'text' ? (
+              <p>{message.content}</p>
+            ) : message.type === 'file' ? (
+              <div>
+                <p>Arquivo: {message.content}</p>
+                <a href={message.content} download>
+                  Clique para baixar
+                </a>
+              </div>
+            ) : (
+              <audio controls src={message.content} />
+            )}
           </div>
-        )}
+        ))}
       </div>
       <div className={styles.send}>
         <button className={styles.plus}>
@@ -103,11 +176,11 @@ function Conversation() {
             alt="Globe icon"
             width={28}
             height={28}
-            onClick={() => seModalFileSend(!modalFileSend)}
+            onClick={() => setModalFileSend(!modalFileSend)}
           />
-          {modalFileSend &&
+          {modalFileSend && (
             <div className={styles.modalFileSend}>
-              <div className={styles.documents}>
+              <div className={styles.documents} onClick={handleDocumentsClick}>
                 <Image
                   aria-hidden
                   src="/document.svg"
@@ -138,7 +211,7 @@ function Conversation() {
                 <p className={styles.title}>Câmera</p>
               </div>
               <div className={styles.contact}>
-              <Image
+                <Image
                   aria-hidden
                   src="/contact.svg"
                   alt="Globe icon"
@@ -148,7 +221,7 @@ function Conversation() {
                 <p className={styles.title}>Contato</p>
               </div>
             </div>
-          }
+          )}
         </button>
         <div className={styles.message}>
           <button className={styles.face}>
@@ -162,14 +235,14 @@ function Conversation() {
           </button>
           <input
             type="text"
-            placeholder='Digite uma mensagem'
-            value={message}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+            placeholder="Digite uma mensagem"
+            value={textMessage}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setTextMessage(e.target.value)}
           />
         </div>
         <button
           className={styles.plus}
-          onClick={handleToggleRecording}
+          onClick={handleSends}
         >
           {isRecording ? (
             <Image
@@ -179,11 +252,11 @@ function Conversation() {
               width={24}
               height={24}
             />
-          ) : message.length > 0 ? (
+          ) : textMessage.length > 0 ? (
             <Image
               aria-hidden
               src="/send.svg"
-              alt="Globe icon"
+              alt="Send text"
               width={24}
               height={24}
             />
@@ -198,8 +271,14 @@ function Conversation() {
           )}
         </button>
       </div>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
     </div>
-  )
+  );
 }
 
 export default Conversation;
