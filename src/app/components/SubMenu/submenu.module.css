@@ -72,6 +72,13 @@
   padding: .5rem .8rem;
   border-radius: 20px;
   background-color: rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 1380px) {    
+  font-size: 12px;
+  }
+  @media (max-width: 1210px) {    
+    font-size: 10px;
+    }
 }
 
 .list {
