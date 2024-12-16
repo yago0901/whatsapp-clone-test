@@ -7,13 +7,13 @@ function Conversation() {
     <div className={styles.conversation}>
       <div className={styles.header}>
         <div className={styles.description}>
-            <Image
-              aria-hidden
-              src="/default-user.svg"
-              alt="Globe icon"
-              width={43}
-              height={43}
-            />
+          <Image
+            aria-hidden
+            src="/default-user.svg"
+            alt="Globe icon"
+            width={43}
+            height={43}
+          />
           <div className={styles.dados}>
             <div>Contato</div>
             <div className={styles.status}>online</div>
@@ -23,12 +23,36 @@ function Conversation() {
       </div>
       <div className={styles.screen}>COnversa aqui</div>
       <div className={styles.send}>
-        <button>+</button>
+        <button className={styles.plus}>
+          <Image
+            aria-hidden
+            src="/plus.svg"
+            alt="Globe icon"
+            width={28}
+            height={28}
+          />
+        </button>
         <div className={styles.message}>
-          <button>Rostinho</button>
+          <button className={styles.face}>
+          <Image
+            aria-hidden
+            src="/face.svg"
+            alt="Globe icon"
+            width={24}
+            height={24}
+          />
+          </button>
           <input type="text" placeholder='Digite uma mensagem' />
         </div>
-        <button>Microfone</button>
+        <button className={styles.plus}>
+          <Image
+            aria-hidden
+            src="/ptt.svg"
+            alt="Globe icon"
+            width={24}
+            height={24}
+          />
+        </button>
       </div>
     </div>
   )
