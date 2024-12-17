@@ -9,7 +9,7 @@ interface IMessage {
   sender: number;
   content: string;
   timestamp: Date;
-  type: 'text' | 'audio' | 'image' | 'file' | 'contact';
+  type: 'text' | 'audio' | 'image' | 'file' | 'contact' | 'video';
 }
 
 function Conversation() {
@@ -23,6 +23,8 @@ function Conversation() {
 
   const [modalFileSend, setModalFileSend] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const filePictureInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleToggleRecording = async () => {
     if (isRecording) {
@@ -107,6 +109,31 @@ function Conversation() {
     }
   };
 
+  const handlePictureClick = () => {
+    if (filePictureInputRef.current) {
+      filePictureInputRef.current.click();
+    }
+  };
+
+  const handlePictureChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+  
+      const newMessage: IMessage = {
+        id: Date.now(),
+        sender: 1,
+        content: fileUrl,
+        timestamp: new Date(),
+        type: file.type.startsWith('image/') ? 'image' : 'video',
+      };
+  
+      setThread((prev) => [...prev, newMessage]);
+      if (filePictureInputRef.current) filePictureInputRef.current.value = '';
+      console.log({type: file.type.startsWith('image/') ? 'image' : 'video'})
+    }
+  };
+
   return (
     <div className={styles.conversation}>
       <div className={styles.header}>
@@ -152,7 +179,18 @@ function Conversation() {
       <div className={styles.screen}>
         {thread.map((message) => (
           <div key={message.id} className={styles.messageItem}>
-            <span><b>{message.type === 'text' ? 'Texto:' : message.type === 'file' ? 'Arquivo:' : 'Áudio:'}</b></span>
+            <span>
+              <b>
+                {{
+                  text: 'Texto:',
+                  file: 'Arquivo:',
+                  audio: 'Áudio:',
+                  image: 'Foto:',
+                  video: 'Vídeo:',
+                  contact: 'Contato:',
+                }[message.type] || 'Outro:'}
+              </b>
+            </span>
             {message.type === 'text' ? (
               <p>{message.content}</p>
             ) : message.type === 'file' ? (
@@ -162,8 +200,13 @@ function Conversation() {
                   Clique para baixar
                 </a>
               </div>
+            ) : message.type === 'image' ? (
+              <Image width={10} height={10} src={message.content} alt="Imagem enviada" className={styles.media} />
             ) : (
-              <audio controls src={message.content} />
+              <video controls className={styles.media}>
+                <source src={message.content} type="video/mp4" />
+                Seu navegador não suporta a reprodução de vídeo.
+              </video>
             )}
           </div>
         ))}
@@ -190,7 +233,13 @@ function Conversation() {
                 />
                 <p className={styles.title}>Documentos</p>
               </div>
-              <div className={styles.pictures}>
+              <input
+                type="file"
+                ref={fileInputRef}
+                hidden
+                onChange={handleFileChange}
+              />
+              <div className={styles.pictures} onClick={handlePictureClick}>
                 <Image
                   aria-hidden
                   src="/picture.svg"
@@ -200,6 +249,13 @@ function Conversation() {
                 />
                 <p className={styles.title}>Fotos e vídeos</p>
               </div>
+              <input
+                type="file"
+                ref={filePictureInputRef}
+                hidden
+                accept="image/*,video/*"
+                onChange={handlePictureChange}
+              />
               <div className={styles.cam}>
                 <Image
                   aria-hidden
@@ -234,10 +290,17 @@ function Conversation() {
             />
           </button>
           <input
+            className={styles.input}
             type="text"
             placeholder="Digite uma mensagem"
             value={textMessage}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setTextMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && textMessage.trim() !== '') {
+                handleSendMessage();
+                setTextMessage('');
+              }
+            }}
           />
         </div>
         <button
@@ -271,12 +334,6 @@ function Conversation() {
           )}
         </button>
       </div>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-      />
     </div>
   );
 }
