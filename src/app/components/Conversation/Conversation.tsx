@@ -3,6 +3,7 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import styles from './conversation.module.css';
 import Image from 'next/image';
+import ChatHeader from './ChatHeader/ChatHeader';
 
 interface IMessage {
   id: number;
@@ -18,8 +19,8 @@ function Conversation() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const [textMessage, setTextMessage] = useState<string>('');
   const [thread, setThread] = useState<IMessage[]>([]);
+  const [textMessage, setTextMessage] = useState<string>('');
 
   const [modalFileSend, setModalFileSend] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -119,7 +120,7 @@ function Conversation() {
     const file = event.target.files?.[0];
     if (file) {
       const fileUrl = URL.createObjectURL(file);
-  
+
       const newMessage: IMessage = {
         id: Date.now(),
         sender: 1,
@@ -127,55 +128,16 @@ function Conversation() {
         timestamp: new Date(),
         type: file.type.startsWith('image/') ? 'image' : 'video',
       };
-  
+
       setThread((prev) => [...prev, newMessage]);
       if (filePictureInputRef.current) filePictureInputRef.current.value = '';
-      console.log({type: file.type.startsWith('image/') ? 'image' : 'video'})
+      console.log({ type: file.type.startsWith('image/') ? 'image' : 'video' })
     }
   };
 
   return (
     <div className={styles.conversation}>
-      <div className={styles.header}>
-        <div className={styles.description}>
-          <Image
-            aria-hidden
-            src="/default-user.svg"
-            alt="Globe icon"
-            width={43}
-            height={43}
-          />
-          <div className={styles.dados}>
-            <div>Contato</div>
-            <div className={styles.status}>online</div>
-          </div>
-        </div>
-        <div className={styles.actions}>
-          <Image
-            className={styles.camera}
-            aria-hidden
-            src="/video.svg"
-            alt="Globe icon"
-            width={24}
-            height={24}
-          />
-          <Image
-            className={styles.search}
-            aria-hidden
-            src="/search.svg"
-            alt="Globe icon"
-            width={34}
-            height={34}
-          />
-          <Image
-            aria-hidden
-            src="/menu.svg"
-            alt="Globe icon"
-            width={28}
-            height={28}
-          />
-        </div>
-      </div>
+      <ChatHeader />
       <div className={styles.screen}>
         {thread.map((message) => (
           <div key={message.id} className={styles.messageItem}>
