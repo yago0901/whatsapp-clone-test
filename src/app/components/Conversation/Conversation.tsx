@@ -24,7 +24,6 @@ function Conversation({ selectedContactId }: ConversationProps) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const [thread, setThread] = useState<IMessage2[]>([]);
   const [textMessage, setTextMessage] = useState<string>('');
 
   const [modalFileSend, setModalFileSend] = useState<boolean>(false);

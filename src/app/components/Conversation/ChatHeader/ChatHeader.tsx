@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import styles from './chatheader.module.css';
 import Image from 'next/image';
 import { ConversationProps } from '../Conversation';
-import UserMessages from '../../fakers/Conversations';
 import Agenda from '../../fakers/Agenda';
 
 function ChatHeader({ selectedContactId }: ConversationProps) {
