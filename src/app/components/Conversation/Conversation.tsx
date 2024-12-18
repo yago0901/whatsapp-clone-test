@@ -4,9 +4,9 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import styles from './conversation.module.css';
 import Image from 'next/image';
 import ChatHeader from './ChatHeader/ChatHeader';
-import UserMessages from '../fakers/Conversations';
+import UserMessages, { IMessage } from '../fakers/Conversations';
 
-interface IMessage {
+interface IMessage2 {
   id: number;
   sender: number;
   content: string;
@@ -24,14 +24,14 @@ function Conversation({ selectedContactId }: ConversationProps) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const [thread, setThread] = useState<IMessage[]>([]);
+  const [thread, setThread] = useState<IMessage2[]>([]);
   const [textMessage, setTextMessage] = useState<string>('');
 
   const [modalFileSend, setModalFileSend] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const filePictureInputRef = useRef<HTMLInputElement | null>(null);
-  
+
   const userMessages = selectedContactId !== undefined ? UserMessages[selectedContactId] : undefined;
 
   const handleToggleRecording = async () => {
@@ -58,12 +58,15 @@ function Conversation({ selectedContactId }: ConversationProps) {
 
           const newMessage: IMessage = {
             id: Date.now(),
-            sender: 1,
+            sender: 'self',
             content: audioUrl,
             timestamp: new Date(),
             type: 'audio',
           };
-          setThread((prev) => [...prev, newMessage]);
+
+          if (selectedContactId !== undefined) {
+            UserMessages[selectedContactId].push(newMessage);
+          }
           setAudioUrl(null);
         };
 
@@ -79,12 +82,15 @@ function Conversation({ selectedContactId }: ConversationProps) {
     if (textMessage.trim() !== '') {
       const newMessage: IMessage = {
         id: Date.now(),
-        sender: 1,
+        sender: 'self',
         content: textMessage,
         timestamp: new Date(),
         type: 'text',
       };
-      setThread((prev) => [...prev, newMessage]);
+      if (selectedContactId !== undefined) {
+        UserMessages[selectedContactId].push(newMessage);
+      }
+      setAudioUrl(null);
       setTextMessage('');
     }
   };
@@ -102,12 +108,14 @@ function Conversation({ selectedContactId }: ConversationProps) {
     if (file) {
       const newMessage: IMessage = {
         id: Date.now(),
-        sender: 1,
+        sender: "self",
         content: file.name,
         timestamp: new Date(),
         type: 'file',
       };
-      setThread((prev) => [...prev, newMessage]);
+      if (selectedContactId !== undefined) {
+        UserMessages[selectedContactId].push(newMessage);
+      }
     }
   };
 
@@ -130,23 +138,24 @@ function Conversation({ selectedContactId }: ConversationProps) {
 
       const newMessage: IMessage = {
         id: Date.now(),
-        sender: 1,
+        sender: "self",
         content: fileUrl,
         timestamp: new Date(),
         type: file.type.startsWith('image/') ? 'image' : 'video',
       };
 
-      setThread((prev) => [...prev, newMessage]);
-      if (filePictureInputRef.current) filePictureInputRef.current.value = '';
-      console.log({ type: file.type.startsWith('image/') ? 'image' : 'video' })
+      if (selectedContactId !== undefined) {
+        UserMessages[selectedContactId].push(newMessage);
+      }
+      
     }
   };
 
   return (
     <div className={styles.conversation}>
-      <ChatHeader selectedContactId={selectedContactId}/>
+      <ChatHeader selectedContactId={selectedContactId} />
       <div className={styles.screen}>
-        {thread.map((message) => (
+        {userMessages?.map((message) => (
           <div key={message.id} className={styles.messageItem}>
             <span>
               <b>
