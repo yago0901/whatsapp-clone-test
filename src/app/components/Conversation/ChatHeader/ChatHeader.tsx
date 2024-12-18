@@ -3,10 +3,14 @@ import React, { useState } from 'react'
 import styles from './chatheader.module.css';
 import Image from 'next/image';
 import { ConversationProps } from '../Conversation';
+import UserMessages from '../../fakers/Conversations';
+import Agenda from '../../fakers/Agenda';
 
 function ChatHeader({ selectedContactId }: ConversationProps) {
 
   const [conversationMenuIsOpen, setConversationMenuIsOpen]= useState<boolean>(false);
+  
+  const userSelected = Agenda.contact.find(contact => contact.id === selectedContactId);
 
   return (
     <div className={styles.chatHeader}>
@@ -19,7 +23,7 @@ function ChatHeader({ selectedContactId }: ConversationProps) {
           height={43}
         />
         <div className={styles.dados}>
-          <div>Contato</div>
+          <div>{userSelected ? (userSelected.name ? userSelected.name : userSelected.cel) : 'Contato'}</div>
           <div className={styles.status}>online</div>
         </div>
       </div>

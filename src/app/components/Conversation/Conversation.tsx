@@ -4,6 +4,7 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import styles from './conversation.module.css';
 import Image from 'next/image';
 import ChatHeader from './ChatHeader/ChatHeader';
+import UserMessages from '../fakers/Conversations';
 
 interface IMessage {
   id: number;
@@ -30,6 +31,8 @@ function Conversation({ selectedContactId }: ConversationProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const filePictureInputRef = useRef<HTMLInputElement | null>(null);
+  
+  const userMessages = selectedContactId !== undefined ? UserMessages[selectedContactId] : undefined;
 
   const handleToggleRecording = async () => {
     if (isRecording) {

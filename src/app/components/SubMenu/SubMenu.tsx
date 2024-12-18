@@ -65,7 +65,7 @@ function SubMenu({ setSelectedContactId }: IHeaderProps) {
               <div className={styles.listRight}>
                 <div className={styles.rightUp}>
                   <div className={styles.UpNumber}>
-                    {contact.cel}
+                    {contact.name}
                   </div>
                   <div className={styles.data}>
                     {contact.time}
