@@ -6,14 +6,6 @@ import Image from 'next/image';
 import ChatHeader from './ChatHeader/ChatHeader';
 import UserMessages, { IMessage } from '../fakers/Conversations';
 
-interface IMessage2 {
-  id: number;
-  sender: number;
-  content: string;
-  timestamp: Date;
-  type: 'text' | 'audio' | 'image' | 'file' | 'contact' | 'video';
-}
-
 export interface ConversationProps {
   selectedContactId: number | undefined;
 }
