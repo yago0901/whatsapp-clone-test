@@ -13,7 +13,11 @@ interface IMessage {
   type: 'text' | 'audio' | 'image' | 'file' | 'contact' | 'video';
 }
 
-function Conversation() {
+export interface ConversationProps {
+  selectedContactId: number | undefined;
+}
+
+function Conversation({ selectedContactId }: ConversationProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -137,7 +141,7 @@ function Conversation() {
 
   return (
     <div className={styles.conversation}>
-      <ChatHeader />
+      <ChatHeader selectedContactId={selectedContactId}/>
       <div className={styles.screen}>
         {thread.map((message) => (
           <div key={message.id} className={styles.messageItem}>

@@ -1,8 +1,12 @@
 import React from 'react'
 import styles from "./submenu.module.css";
 import Image from 'next/image';
+import Agenda, { IContact } from '../fakers/Agenda';
 
-function SubMenu() {
+interface IHeaderProps {
+  setSelectedContactId: (selectedContactId: number | undefined) => void;
+}
+function SubMenu({ setSelectedContactId }: IHeaderProps) {
   return (
     <div className={styles.submenu}>
       <div className={styles.actions}>
@@ -46,28 +50,33 @@ function SubMenu() {
         <div className={styles.filterItem}>Grupos</div>
       </div>
       <div className={styles.list}>
-        <div className={styles.listItem}>
-          <div className={styles.listLeft}>
-            <Image
-              aria-hidden
-              src="/default-user.svg"
-              alt="Search icon"
-              width={50}
-              height={50}
-            />
-          </div>
-          <div className={styles.listRight}>
-            <div className={styles.rightUp}>
-              <div className={styles.UpNumber}>
-                +55 11 98877 6655
+        {Agenda.contact.map((contact: IContact) => {
+          return (
+            <div className={styles.listItem} key={contact.id} onClick={() => setSelectedContactId(contact.id)}>
+              <div className={styles.listLeft}>
+                <Image
+                  aria-hidden
+                  src="/default-user.svg"
+                  alt="Search icon"
+                  width={50}
+                  height={50}
+                />
               </div>
-              <div className={styles.data}>
-                19:20
+              <div className={styles.listRight}>
+                <div className={styles.rightUp}>
+                  <div className={styles.UpNumber}>
+                    {contact.cel}
+                  </div>
+                  <div className={styles.data}>
+                    {contact.time}
+                  </div>
+                </div>
+                <div className={styles.message}>{contact.lastMessage}</div>
               </div>
             </div>
-            <div className={styles.message}>Tudo bem </div>
-          </div>
-        </div>
+          );
+        })}
+
       </div>
     </div>
   )

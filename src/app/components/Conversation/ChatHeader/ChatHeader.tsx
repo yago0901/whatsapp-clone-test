@@ -2,9 +2,9 @@
 import React, { useState } from 'react'
 import styles from './chatheader.module.css';
 import Image from 'next/image';
+import { ConversationProps } from '../Conversation';
 
-
-function ChatHeader() {
+function ChatHeader({ selectedContactId }: ConversationProps) {
 
   const [conversationMenuIsOpen, setConversationMenuIsOpen]= useState<boolean>(false);
 
