@@ -1,3 +1,5 @@
+import UserMessages from './Conversations';
+
 export interface IContact {
   id: number;
   name: string;
@@ -84,5 +86,13 @@ const Agenda: IAgenda = {
     },
   ],
 };
+
+Agenda.contact = Agenda.contact.map(contact => {
+  const lastMessageObj = UserMessages[contact.id]?.slice(-1)[0]; 
+  if (lastMessageObj) {
+    contact.lastMessage = lastMessageObj.content; 
+  }
+  return contact;
+});
 
 export default Agenda;

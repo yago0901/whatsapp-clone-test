@@ -1,10 +1,11 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styles from './conversation.module.css';
 import Image from 'next/image';
 import ChatHeader from './ChatHeader/ChatHeader';
 import UserMessages, { IMessage } from '../fakers/Conversations';
+import Agenda from '../fakers/Agenda';
 
 export interface ConversationProps {
   selectedContactId: number | undefined;
@@ -24,6 +25,17 @@ function Conversation({ selectedContactId }: ConversationProps) {
   const filePictureInputRef = useRef<HTMLInputElement | null>(null);
 
   const userMessages = selectedContactId !== undefined ? UserMessages[selectedContactId] : undefined;
+
+  useEffect(() => {
+    Agenda.contact = Agenda.contact.map(contact => {
+      const lastMessageObj = UserMessages[contact.id]?.slice(-1)[0];
+      if (lastMessageObj) {
+        contact.lastMessage = lastMessageObj.content;
+      }
+      return contact;
+    });
+
+  }, [Agenda.contact, UserMessages]);
 
   const handleToggleRecording = async () => {
     if (isRecording) {
@@ -84,6 +96,14 @@ function Conversation({ selectedContactId }: ConversationProps) {
       setAudioUrl(null);
       setTextMessage('');
     }
+
+    Agenda.contact = Agenda.contact.map(contact => {
+      const lastMessageObj = UserMessages[contact.id]?.slice(-1)[0];
+      if (lastMessageObj) {
+        contact.lastMessage = lastMessageObj.content;
+      }
+      return contact;
+    });
   };
 
   const handleSends = () => {
@@ -125,8 +145,13 @@ function Conversation({ selectedContactId }: ConversationProps) {
   const handlePictureChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const validTypes = ['image/jpeg', 'image/png', 'video/mp4'];
+      if (!validTypes.includes(file.type)) {
+        alert('Formato de arquivo não suportado.');
+        return;
+      }
+  
       const fileUrl = URL.createObjectURL(file);
-
       const newMessage: IMessage = {
         id: Date.now(),
         sender: "self",
@@ -134,34 +159,30 @@ function Conversation({ selectedContactId }: ConversationProps) {
         timestamp: new Date(),
         type: file.type.startsWith('image/') ? 'image' : 'video',
       };
-
+  
       if (selectedContactId !== undefined) {
         UserMessages[selectedContactId].push(newMessage);
       }
-      
     }
   };
+  
 
   return (
     <div className={styles.conversation}>
       <ChatHeader selectedContactId={selectedContactId} />
       <div className={styles.screen}>
         {userMessages?.map((message) => (
-          <div key={message.id} className={styles.messageItem}>
-            <span>
-              <b>
-                {{
-                  text: 'Texto:',
-                  file: 'Arquivo:',
-                  audio: 'Áudio:',
-                  image: 'Foto:',
-                  video: 'Vídeo:',
-                  contact: 'Contato:',
-                }[message.type] || 'Outro:'}
-              </b>
-            </span>
+          <div
+            key={message.id}
+            className={`${styles.messageItem} ${message.sender === 'self' ? styles['messageItem--self'] : ''
+              }`}
+          >
             {message.type === 'text' ? (
-              <p>{message.content}</p>
+              <div
+                className={`${styles.displayMessage} ${message.sender === 'self' ? styles['displayMessage--self'] : ''
+                  }`}>
+                <p>{message.content}</p>
+              </div>
             ) : message.type === 'file' ? (
               <div>
                 <p>Arquivo: {message.content}</p>
@@ -205,8 +226,8 @@ function Conversation({ selectedContactId }: ConversationProps) {
               <input
                 type="file"
                 ref={fileInputRef}
-                hidden
                 onChange={handleFileChange}
+                style={{ display: "none" }}
               />
               <div className={styles.pictures} onClick={handlePictureClick}>
                 <Image
@@ -221,9 +242,9 @@ function Conversation({ selectedContactId }: ConversationProps) {
               <input
                 type="file"
                 ref={filePictureInputRef}
-                hidden
-                accept="image/*,video/*"
                 onChange={handlePictureChange}
+                accept="image/*,video/*"
+                style={{ display: "none" }}
               />
               <div className={styles.cam}>
                 <Image
