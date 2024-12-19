@@ -150,7 +150,7 @@ function Conversation({ selectedContactId }: ConversationProps) {
         alert('Formato de arquivo não suportado.');
         return;
       }
-  
+
       const fileUrl = URL.createObjectURL(file);
       const newMessage: IMessage = {
         id: Date.now(),
@@ -159,13 +159,13 @@ function Conversation({ selectedContactId }: ConversationProps) {
         timestamp: new Date(),
         type: file.type.startsWith('image/') ? 'image' : 'video',
       };
-  
+
       if (selectedContactId !== undefined) {
         UserMessages[selectedContactId].push(newMessage);
       }
     }
   };
-  
+
 
   return (
     <div className={styles.conversation}>
@@ -184,19 +184,28 @@ function Conversation({ selectedContactId }: ConversationProps) {
                 <p>{message.content}</p>
               </div>
             ) : message.type === 'file' ? (
-              <div>
+              <div
+                className={`${styles.displayMessage} ${message.sender === 'self' ? styles['displayMessage--self'] : ''
+                  }`}>
                 <p>Arquivo: {message.content}</p>
                 <a href={message.content} download>
                   Clique para baixar
                 </a>
               </div>
             ) : message.type === 'image' ? (
-              <Image width={10} height={10} src={message.content} alt="Imagem enviada" className={styles.media} />
+              <div
+                className={`${styles.displayMessageImage} ${message.sender === 'self' ? styles['displayMessageImage--self'] : ''
+                  }`}>
+                <Image width={10} height={10} src={message.content} alt="Imagem enviada" className={styles.media} />
+              </div>
             ) : (
-              <video controls className={styles.media}>
-                <source src={message.content} type="video/mp4" />
-                Seu navegador não suporta a reprodução de vídeo.
-              </video>
+              <div className={`${styles.displayMessageImage} ${message.sender === 'self' ? styles['displayMessageImage--self'] : ''
+                }`}>
+                <video controls className={styles.media}>
+                  <source src={message.content} type="video/mp4" />
+                  Seu navegador não suporta a reprodução de vídeo.
+                </video>
+              </div>
             )}
           </div>
         ))}

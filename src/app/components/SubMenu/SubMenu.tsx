@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import styles from "./submenu.module.css";
 import Image from 'next/image';
 import Agenda, { IContact } from '../fakers/Agenda';
@@ -7,6 +7,15 @@ interface IHeaderProps {
   setSelectedContactId: (selectedContactId: number | undefined) => void;
 }
 function SubMenu({ setSelectedContactId }: IHeaderProps) {
+
+  const[filterContacts, setFilterContacts] = useState<string| undefined>(undefined);
+
+  const filteredContacts = filterContacts
+  ? Agenda.contact.filter(item =>
+      item.name.toLowerCase().includes(filterContacts.toLowerCase())
+    )
+  : Agenda.contact;
+
   return (
     <div className={styles.submenu}>
       <div className={styles.actions}>
@@ -41,7 +50,12 @@ function SubMenu({ setSelectedContactId }: IHeaderProps) {
             height={24}
           />
         </button>
-        <input className={styles.input} placeholder="Pesquisar" type="text" />
+        <input 
+        className={styles.input} 
+        placeholder="Pesquisar" 
+        type="text" 
+        onChange={(e:ChangeEvent<HTMLInputElement>) => setFilterContacts(e.target.value)} 
+        />
       </div>
       <div className={styles.filter}>
         <div className={styles.filterItem}>Tudo</div>
@@ -50,7 +64,7 @@ function SubMenu({ setSelectedContactId }: IHeaderProps) {
         <div className={styles.filterItem}>Grupos</div>
       </div>
       <div className={styles.list}>
-        {Agenda.contact.map((contact: IContact) => {
+        {filteredContacts.map((contact: IContact) => {
           return (
             <div className={styles.listItem} key={contact.id} onClick={() => setSelectedContactId(contact.id)}>
               <div className={styles.listLeft}>

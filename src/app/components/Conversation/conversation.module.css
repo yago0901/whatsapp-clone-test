@@ -79,6 +79,8 @@
 .messageItem {
   padding: 0 1rem;
   width: 100%;
+  font-size: 16px;
+  font-family: var(--font-roboto);
 }
 
 .messageItem--self {
@@ -87,13 +89,36 @@
 }
 
 .displayMessage{
+  display: inline-block;
+  word-wrap: break-word;
   background: white;
   padding: .5rem;
-  max-width: 50%;
+  max-width: 70%;
   border-radius: 8px;
 }
 
+.displayMessage p {
+  white-space: normal;
+}
+
 .displayMessage--self {
+  background-color: rgba(29, 170, 97, 0.6);
+}
+
+.displayMessageImage{
+  display: inline-block;
+  word-wrap: break-word;
+  background: white;
+  padding: .5rem;
+  max-width: 30%;
+  border-radius: 8px;
+}
+
+.displayMessageImage p {
+  white-space: normal;
+}
+
+.displayMessageImage--self {
   background-color: rgba(29, 170, 97, 0.6);
 }
 
