@@ -24,6 +24,20 @@ function Conversation({ selectedContactId }: ConversationProps) {
 
   const filePictureInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hoveredMessageId, setHoveredMessageId] = useState<number | undefined>(undefined);
+  const [idDropdownOpen, setIdDropdownOpen] = useState<number | undefined>(undefined);
+
+  const handleMouseEnter = (id: number) => {
+    setHoveredMessageId(id);
+  };
+
+  const handleMouseLeave = () => {
+    if (isDropdownOpen === false) {
+      setHoveredMessageId(undefined);
+    }
+  };
+
   const userMessages = selectedContactId !== undefined ? UserMessages[selectedContactId] : undefined;
 
   useEffect(() => {
@@ -180,8 +194,37 @@ function Conversation({ selectedContactId }: ConversationProps) {
             {message.type === 'text' ? (
               <div
                 className={`${styles.displayMessage} ${message.sender === 'self' ? styles['displayMessage--self'] : ''
-                  }`}>
+                  }`}
+                onMouseEnter={() => handleMouseEnter(message.id)}
+                onMouseLeave={handleMouseLeave}
+              >
                 <p>{message.content}</p>
+                {hoveredMessageId === message.id &&
+                  <div className={styles.individualMenu}>
+                    <div
+                      className={styles.baseDropdown}
+                      onClick={() => { setIsDropdownOpen(!isDropdownOpen); setIdDropdownOpen(message.id) }}
+                    >
+                      <Image
+                        aria-hidden
+                        src="/down-arrow.svg"
+                        alt="Globe icon"
+                        width={8}
+                        height={8}
+                      />
+                    </div>
+                    {isDropdownOpen && idDropdownOpen === message.id &&
+                      <div className={styles.singleDropdown}>
+                        <div className={styles.dropdownItem}>Responder</div>
+                        <div className={styles.dropdownItem}>Reagir</div>
+                        <div className={styles.dropdownItem}>Encaminhar</div>
+                        <div className={styles.dropdownItem}>Fixar</div>
+                        <div className={styles.dropdownItem}>Favoritar</div>
+                        <div className={styles.dropdownItem}>Denunciar</div>
+                        <div className={styles.dropdownItem}>Apagar</div>
+                      </div>
+                    }
+                  </div>}
               </div>
             ) : message.type === 'file' ? (
               <div

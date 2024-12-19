@@ -79,7 +79,7 @@
 .messageItem {
   padding: 0 1rem;
   width: 100%;
-  font-size: 16px;
+  font-size: 15px;
   font-family: var(--font-roboto);
 }
 
@@ -92,12 +92,42 @@
   display: inline-block;
   word-wrap: break-word;
   background: white;
-  padding: .5rem;
+  padding: .75rem;
   max-width: 70%;
   border-radius: 8px;
+  position: relative;
+}
+
+.individualMenu {
+  top:0;
+  right: 0;
+  position: absolute;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.baseDropdown {
+  text-align: end;
+  margin-right: .5rem;
+}
+
+.singleDropdown {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.dropdownItem{
+  padding: .5rem .7rem;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .displayMessage p {
+  margin-right: .5rem;
   white-space: normal;
 }
 
