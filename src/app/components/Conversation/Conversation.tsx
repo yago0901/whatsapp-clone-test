@@ -180,6 +180,17 @@ function Conversation({ selectedContactId }: ConversationProps) {
     }
   };
 
+  const handleDeleteMessage = (messageId: number) => {
+    setIsDropdownOpen(false);
+    setIdDropdownOpen(undefined);
+    setHoveredMessageId(undefined)
+  
+    if (selectedContactId !== undefined) {
+      UserMessages[selectedContactId] = UserMessages[selectedContactId].filter(
+        (message) => message.id !== messageId
+      );
+    }
+  };
 
   return (
     <div className={styles.conversation}>
@@ -221,7 +232,9 @@ function Conversation({ selectedContactId }: ConversationProps) {
                         <div className={styles.dropdownItem}>Fixar</div>
                         <div className={styles.dropdownItem}>Favoritar</div>
                         <div className={styles.dropdownItem}>Denunciar</div>
-                        <div className={styles.dropdownItem}>Apagar</div>
+                        <div className={styles.dropdownItem} onClick={() => handleDeleteMessage(message.id)}>
+                          Apagar
+                        </div>
                       </div>
                     }
                   </div>}

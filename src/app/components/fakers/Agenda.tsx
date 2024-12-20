@@ -8,7 +8,7 @@ export interface IContact {
   time: string;
 }
 
- export interface IAgenda {
+export interface IAgenda {
   contact: IContact[];
 }
 
@@ -83,6 +83,76 @@ const Agenda: IAgenda = {
       cel: 111234567,
       lastMessage: "On my way!",
       time: "10:18",
+    },
+    {
+      id: 11,
+      name: "Lucas Miller",
+      cel: 123987654,
+      lastMessage: "How’s everything going?",
+      time: "14:50",
+    },
+    {
+      id: 12,
+      name: "Mia Davis",
+      cel: 222654321,
+      lastMessage: "Let’s meet for lunch soon!",
+      time: "12:00",
+    },
+    {
+      id: 13,
+      name: "Ethan Taylor",
+      cel: 333876543,
+      lastMessage: "Got your email, will reply later.",
+      time: "15:40",
+    },
+    {
+      id: 14,
+      name: "Isabella Brown",
+      cel: 444321765,
+      lastMessage: "Thanks for the information.",
+      time: "17:00",
+    },
+    {
+      id: 15,
+      name: "James Wilson",
+      cel: 555765432,
+      lastMessage: "Can you call me back?",
+      time: "18:10",
+    },
+    {
+      id: 16,
+      name: "Charlotte Moore",
+      cel: 666543210,
+      lastMessage: "I’ll be there in 30 minutes.",
+      time: "19:15",
+    },
+    {
+      id: 17,
+      name: "Amelia Jackson",
+      cel: 777234567,
+      lastMessage: "Just got the update, thanks!",
+      time: "08:50",
+    },
+    {
+      id: 18,
+      name: "Benjamin Lewis",
+      cel: 888765432,
+      lastMessage: "Can you send me the report?",
+      time: "11:00",
+    },
+    {
+      id: 19,
+      name: "Lily Clark",
+      cel: 999876543,
+      lastMessage: "I’ll check it out and get back to you.",
+      time: "13:25",
+    },
+    {
+      id: 20,
+      name: "Oliver Martinez",
+      cel: 101234567,
+      lastMessage: "Looking forward to our meeting!",
+      time: "17:35",
     },
   ],
 };

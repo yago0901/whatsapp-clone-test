@@ -84,6 +84,24 @@
 .list {
   width: 94.5%;
   height: 84.4%;
+  overflow-y: scroll;
+}
+
+.list::-webkit-scrollbar {
+  width: 4px; 
+}
+
+.list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .listItem {
